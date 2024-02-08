@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sskva.bigtask.dao.Dao;
+import ru.sskva.bigtask.domain.constant.Status;
 
 import javax.sql.DataSource;
 
@@ -24,8 +25,9 @@ public class DaoImpl extends JdbcDaoSupport implements Dao {
     }
 
     @Override
-    public boolean ifExistsFileInProgress() {
-        return false;
+    public boolean ifExistsFileInProcessOrLoading() {
+        return getJdbcTemplate().queryForObject("SELECT (SELECT count(*) FROM file_info WHERE status = ? OR status = ?) > 0 AS result;",
+                Boolean.class, Status.IN_PROCESS.toString(), Status.LOADING.toString());
     }
 
     @Override

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JobCheck {
+public class JobOneThread {
 
     @Scheduled(cron = "*/5 * * * * *")
     public void jobCheck() {

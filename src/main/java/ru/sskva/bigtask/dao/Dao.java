@@ -2,7 +2,7 @@ package ru.sskva.bigtask.dao;
 
 public interface Dao {
 
-    boolean ifExistsFileInProgress();
+    boolean ifExistsFileInProcessOrLoading();
 
     void saveFileInfo(String fileId, int size);
 }
