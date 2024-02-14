@@ -2,7 +2,7 @@ package ru.sskva.bigtask.job;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -10,15 +10,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JobOneThread {
 
-    @Scheduled(cron = "*/5 * * * * *")
+//    @Scheduled(cron = "*/1 * * * * *")
     public void jobCheck() {
 
-        log.info("jobCheck start");
-        long timeStart = System.currentTimeMillis();
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
 
-
-
-        long timeWork = (System.currentTimeMillis() - timeStart) / 1000;
-        log.info("jobCheck end, timeWork: {} seconds", timeWork);
+        stopWatch.stop();
+        log.info("jobCheck ended, time work: {}", stopWatch.getTime() / 1000);
     }
 }

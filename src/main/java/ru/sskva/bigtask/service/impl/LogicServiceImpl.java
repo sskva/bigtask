@@ -23,11 +23,11 @@ import java.util.UUID;
 public class LogicServiceImpl implements LogicService {
 
     private final Dao dao;
-    private final AsyncCall asyncCall;
+    private final AsyncSaveInn asyncSaveInn;
     private final Config config;
 
     @Override
-    public Response massCheckCSV(MultipartFile file)  {
+    public Response saveInnCSV(MultipartFile file)  {
 
         if (dao.ifExistsFileInProcessOrLoading())
             throw new ExistsFileInProcessOrLoadingException();
@@ -40,7 +40,7 @@ public class LogicServiceImpl implements LogicService {
 
         String fileId = UUID.randomUUID().toString().replace("-", "");
         dao.saveFileInfo(fileId, massCheckItemList.size());
-        asyncCall.saveInnCheckAdvanced(massCheckItemList, fileId);
+        asyncSaveInn.saveInn(massCheckItemList, fileId);
 
         return SuccessResponse.builder().data(fileId).build();
     }

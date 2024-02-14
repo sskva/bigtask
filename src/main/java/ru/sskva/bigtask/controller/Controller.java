@@ -19,12 +19,12 @@ public class Controller {
 
     private final LogicService logicService;
 
-    @PostMapping(value = "massCheckAdvancedCSV", consumes = MULTIPART_FORM_DATA, produces = "application/json;charset=UTF-8")
-    public Response massCheckCSV(@RequestParam("file") MultipartFile file) {
+    @PostMapping(value = "checkInnCSV", consumes = MULTIPART_FORM_DATA, produces = "application/json;charset=UTF-8")
+    public Response checkInnCSV(@RequestParam("file") MultipartFile file) {
 
-        log.info("ENDPOINT_MASS_CHECK_START. File name: {}, ContentType: {}, File size: {}", file.getOriginalFilename(), file.getContentType(), file.getSize());
-        Response response = logicService.massCheckCSV(file);
-        log.info("ENDPOINT_MASS_CHECK_END: {}", response);
+        log.info("ENDPOINT_CHECK_INN_CSV_START. File name: {}, ContentType: {}, File size: {}", file.getOriginalFilename(), file.getContentType(), file.getSize());
+        Response response = logicService.saveInnCSV(file);
+        log.info("ENDPOINT_CHECK_INN_CSV_END: {}", response);
         return response;
     }
 }

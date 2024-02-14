@@ -19,3 +19,5 @@ CREATE TABLE IF NOT EXISTS check_inn
     PRIMARY KEY (id),
     FOREIGN KEY (file_id) REFERENCES file_info (file_id)
 ) COLLATE utf8_bin;
+
+SELECT id, TIME_TO_SEC(TIMEDIFF(time_end, time_start)) FROM file_info;

@@ -5,5 +5,5 @@ import ru.sskva.bigtask.domain.response.Response;
 
 public interface LogicService {
 
-    Response massCheckCSV(MultipartFile file);
+    Response saveInnCSV(MultipartFile file);
 }
