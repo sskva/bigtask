@@ -40,7 +40,7 @@ public class DaoImpl extends JdbcDaoSupport implements Dao {
     public void saveResult(List<CheckInn> checkInnList) {
 
         getJdbcTemplate().batchUpdate(
-                "UPDATE check_inn SET status_code = ?, status_comment = ? WHERE id = ?;",
+                "UPDATE check_inn SET status_code = ? WHERE id = ?;",
                 new BatchPreparedStatementSetter() {
 
                     public void setValues(PreparedStatement ps, int i) throws SQLException {

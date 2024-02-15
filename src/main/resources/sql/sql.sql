@@ -20,4 +20,22 @@ CREATE TABLE IF NOT EXISTS check_inn
     FOREIGN KEY (file_id) REFERENCES file_info (file_id)
 ) COLLATE utf8_bin;
 
-SELECT id, TIME_TO_SEC(TIMEDIFF(time_end, time_start)) FROM file_info;
+
+SELECT count(*)
+FROM check_inn
+WHERE file_id = 'b34e48b92ccb4fb89aab7308ca5d02bd';
+
+DELETE
+FROM check_inn
+WHERE id > 0;
+
+DELETE
+FROM file_info
+WHERE id > 0;
+
+SELECT id,
+       file_id,
+       count_record,
+       TIME_TO_SEC(TIMEDIFF(time_end, time_start))                AS time_work,
+       count_record / TIME_TO_SEC(TIMEDIFF(time_end, time_start)) AS lines_per_second
+FROM file_info;

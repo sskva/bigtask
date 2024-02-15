@@ -31,8 +31,10 @@ public class JobOneThread {
 
         List<CheckInn> checkInnList = dao.getInn();
         log.info("checkInnList.size(): {}", checkInnList.size());
+
         if (checkInnList.size() == 0) {
             dao.setFileStatusProcessed();
+            log.info("jobCheck ended");
             return;
         }
 
