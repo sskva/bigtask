@@ -10,7 +10,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sskva.bigtask.dao.Dao;
 import ru.sskva.bigtask.domain.constant.Status;
-import ru.sskva.bigtask.domain.dto.MassCheckItem;
+import ru.sskva.bigtask.domain.dto.Inn;
+import ru.sskva.bigtask.domain.entity.CheckInn;
+import ru.sskva.bigtask.domain.rowmapper.CheckInnRowMapper;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -35,8 +37,52 @@ public class DaoImpl extends JdbcDaoSupport implements Dao {
 
 
     @Override
+    public void saveResult(List<CheckInn> checkInnList) {
+
+        getJdbcTemplate().batchUpdate(
+                "UPDATE check_inn SET status_code = ?, status_comment = ? WHERE id = ?;",
+                new BatchPreparedStatementSetter() {
+
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        ps.setString(1, checkInnList.get(i).getStatusCode());
+                        ps.setLong(2, checkInnList.get(i).getId());
+                    }
+
+
+
+                    @Override
+                    public int getBatchSize() {
+                        return checkInnList.size();
+                    }
+                });
+    }
+
+
+
+    @Override
+    public void setFileStatusProcessed() {
+        getJdbcTemplate().update("UPDATE file_info SET status = ?, time_end = NOW() WHERE status = ?;",
+                Status.PROCESSED.toString(), Status.IN_PROCESS.toString());
+    }
+
+
+
+    @Override
     public boolean ifExistsFileInProcessOrLoading() {
-        return getJdbcTemplate().queryForObject("SELECT (SELECT count(*) FROM file_info WHERE status = ? OR status = ?) > 0 AS result;", Boolean.class, Status.IN_PROCESS.toString(), Status.LOADING.toString());
+        return getJdbcTemplate().queryForObject("SELECT (SELECT count(*) FROM file_info WHERE status = ? OR status = ?) > 0 AS result;",
+                Boolean.class, Status.IN_PROCESS.toString(), Status.LOADING.toString());
+    }
+
+
+
+    @Override
+    public List<CheckInn> getInn() {
+
+        return getJdbcTemplate().query("SELECT * " +
+                "FROM check_inn " +
+                "WHERE file_id = (SELECT file_id FROM file_info WHERE status = ?) " +
+                "  AND status_code = ? " +
+                "ORDER BY id LIMIT 100;", new CheckInnRowMapper(), Status.IN_PROCESS.toString(), Status.IN_PROCESS.toString());
     }
 
 
@@ -49,7 +95,7 @@ public class DaoImpl extends JdbcDaoSupport implements Dao {
 
 
     @Override
-    public void saveInn(List<MassCheckItem> massCheckItemList, String fileId) {
+    public void saveInn(List<Inn> innList, String fileId) {
 
         log.info("saveInn started");
         StopWatch stopWatch = new StopWatch();
@@ -61,7 +107,7 @@ public class DaoImpl extends JdbcDaoSupport implements Dao {
 
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         ps.setString(1, fileId);
-                        ps.setString(2, massCheckItemList.get(i).getInn());
+                        ps.setString(2, innList.get(i).getInn());
                         ps.setString(3, Status.IN_PROCESS.toString());
                     }
 
@@ -69,7 +115,7 @@ public class DaoImpl extends JdbcDaoSupport implements Dao {
 
                     @Override
                     public int getBatchSize() {
-                        return massCheckItemList.size();
+                        return innList.size();
                     }
                 });
 

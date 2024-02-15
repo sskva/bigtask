@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MassCheckItem {
+public class Inn {
 
     @CsvBindByPosition(position = 0)
     private String inn;

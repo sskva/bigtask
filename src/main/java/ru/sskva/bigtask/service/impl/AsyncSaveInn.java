@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import ru.sskva.bigtask.dao.Dao;
-import ru.sskva.bigtask.domain.dto.MassCheckItem;
+import ru.sskva.bigtask.domain.dto.Inn;
 
 import java.util.List;
 
@@ -17,8 +17,8 @@ public class AsyncSaveInn {
     private final Dao dao;
 
     @Async
-    public void saveInn(List<MassCheckItem> massCheckItemList, String fileId) {
+    public void saveInn(List<Inn> innList, String fileId) {
 
-        dao.saveInn(massCheckItemList, fileId);
+        dao.saveInn(innList, fileId);
     }
 }

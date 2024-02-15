@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sskva.bigtask.config.Config;
 import ru.sskva.bigtask.dao.Dao;
-import ru.sskva.bigtask.domain.dto.MassCheckItem;
+import ru.sskva.bigtask.domain.dto.Inn;
 import ru.sskva.bigtask.domain.response.Response;
 import ru.sskva.bigtask.domain.response.SuccessResponse;
 import ru.sskva.bigtask.exception.ExistsFileInProcessOrLoadingException;
@@ -32,15 +32,15 @@ public class LogicServiceImpl implements LogicService {
         if (dao.ifExistsFileInProcessOrLoading())
             throw new ExistsFileInProcessOrLoadingException();
 
-        List<MassCheckItem> massCheckItemList = CSVProcessor.getListFromCSV(file, MassCheckItem.builder().build());
-        log.info("count lines: {}", massCheckItemList.size());
+        List<Inn> innList = CSVProcessor.getListFromCSV(file, Inn.builder().build());
+        log.info("count lines: {}", innList.size());
 
-        if (massCheckItemList.size() < config.getMinCountLines() || massCheckItemList.size() > config.getMaxCountLines())
+        if (innList.size() < config.getMinCountLines() || innList.size() > config.getMaxCountLines())
             throw new WrongCountLinesException();
 
         String fileId = UUID.randomUUID().toString().replace("-", "");
-        dao.saveFileInfo(fileId, massCheckItemList.size());
-        asyncSaveInn.saveInn(massCheckItemList, fileId);
+        dao.saveFileInfo(fileId, innList.size());
+        asyncSaveInn.saveInn(innList, fileId);
 
         return SuccessResponse.builder().data(fileId).build();
     }

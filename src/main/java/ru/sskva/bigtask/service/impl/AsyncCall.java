@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import ru.sskva.bigtask.domain.dto.MassCheckItem;
+import ru.sskva.bigtask.domain.dto.Inn;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ public class AsyncCall {
 
 
     @Async
-    public void saveInnCheckAdvanced(List<MassCheckItem> massCheckItemList, String fileId) {
+    public void saveInnCheckAdvanced(List<Inn> innList, String fileId) {
 
-        asyncSaveInn.saveInn(massCheckItemList, fileId);
+        asyncSaveInn.saveInn(innList, fileId);
     }
 }
