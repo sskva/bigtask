@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.sskva.bigtask.dao.Dao;
 import ru.sskva.bigtask.domain.entity.CheckInn;
-import ru.sskva.bigtask.work.WorkOneThread;
+import ru.sskva.bigtask.gate.RestClient;
 
 import java.util.List;
 
@@ -17,8 +17,7 @@ import java.util.List;
 public class JobOneThread {
 
     private final Dao dao;
-    private final WorkOneThread worker;
-
+    private final RestClient restClient;
 
 
 
@@ -37,12 +36,27 @@ public class JobOneThread {
             return;
         }
 
-        List<CheckInn> checkInnListAnswer = worker.work(checkInnList);
+        List<CheckInn> checkInnListAnswer = workOneThread(checkInnList);
         log.info("checkInnListAnswer: {}", checkInnListAnswer);
         dao.saveResult(checkInnListAnswer);
 
         stopWatch.stop();
         log.info("jobCheck ended, time work: {}", stopWatch.getTime() / 1000);
+    }
+
+
+
+    public List<CheckInn> workOneThread(List<CheckInn> checkInnList) {
+
+        log.info("workOneThread started");
+
+        for (CheckInn checkInn : checkInnList) {
+            String status = restClient.call(checkInn.getInn());
+            checkInn.setStatusCode(status);
+        }
+
+        log.info("workOneThread ended");
+        return checkInnList;
     }
 }
 
