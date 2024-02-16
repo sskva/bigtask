@@ -15,7 +15,7 @@ public class CheckInnRowMapper implements RowMapper<CheckInn> {
                 .fileId(rs.getString("file_id"))
                 .timeInsert(rs.getString("time_insert"))
                 .inn(rs.getString("inn"))
-                .statusCode(rs.getString("status_code"))
+                .status(rs.getString("status"))
                 .build();
     }
 }

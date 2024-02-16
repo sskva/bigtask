@@ -18,5 +18,5 @@ public class CheckInn {
     String fileId;
     String timeInsert;
     String inn;
-    String statusCode;
+    String status;
 }

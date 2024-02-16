@@ -40,11 +40,11 @@ public class DaoImpl extends JdbcDaoSupport implements Dao {
     public void saveResult(List<CheckInn> checkInnList) {
 
         getJdbcTemplate().batchUpdate(
-                "UPDATE check_inn SET status_code = ? WHERE id = ?;",
+                "UPDATE check_inn SET status = ? WHERE id = ?;",
                 new BatchPreparedStatementSetter() {
 
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
-                        ps.setString(1, checkInnList.get(i).getStatusCode());
+                        ps.setString(1, checkInnList.get(i).getStatus());
                         ps.setLong(2, checkInnList.get(i).getId());
                     }
 
@@ -81,7 +81,7 @@ public class DaoImpl extends JdbcDaoSupport implements Dao {
         return getJdbcTemplate().query("SELECT * " +
                 "FROM check_inn " +
                 "WHERE file_id = (SELECT file_id FROM file_info WHERE status = ?) " +
-                "  AND status_code = ? " +
+                "  AND status = ? " +
                 "ORDER BY id LIMIT 100;", new CheckInnRowMapper(), Status.IN_PROCESS.toString(), Status.IN_PROCESS.toString());
     }
 
@@ -89,7 +89,7 @@ public class DaoImpl extends JdbcDaoSupport implements Dao {
 
     @Override
     public void saveFileInfo(String fileId, int size) {
-        getJdbcTemplate().update("INSERT INTO file_info(file_id, count_record, status) VALUES (?,?,?);", fileId, size, Status.LOADING.toString());
+        getJdbcTemplate().update("INSERT INTO file_info(file_id, count_lines, status) VALUES (?,?,?);", fileId, size, Status.LOADING.toString());
     }
 
 
@@ -102,7 +102,7 @@ public class DaoImpl extends JdbcDaoSupport implements Dao {
         stopWatch.start();
 
         getJdbcTemplate().batchUpdate(
-                "INSERT INTO check_inn(file_id, inn, status_code) VALUES (?,?,?);",
+                "INSERT INTO check_inn(file_id, inn, status) VALUES (?,?,?);",
                 new BatchPreparedStatementSetter() {
 
                     public void setValues(PreparedStatement ps, int i) throws SQLException {

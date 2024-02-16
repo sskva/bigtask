@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JobOneThread {
+public class JobCheck {
 
     private final Dao dao;
     private final RestClient restClient;
@@ -54,7 +54,7 @@ public class JobOneThread {
 
         for (CheckInn checkInn : checkInnList) {
             String status = restClient.call(checkInn.getInn());
-            checkInn.setStatusCode(status);
+            checkInn.setStatus(status);
         }
 
         log.info("workOneThread ended");
