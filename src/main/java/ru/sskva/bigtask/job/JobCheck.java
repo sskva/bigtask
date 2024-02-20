@@ -25,7 +25,6 @@ public class JobCheck {
     public void jobCheck() {
 
         log.info("jobCheck started");
-
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
@@ -38,9 +37,9 @@ public class JobCheck {
             return;
         }
 
-        List<CheckInn> checkInnListAnswer = workOneThread(checkInnList);
-        log.info("checkInnListAnswer: {}", checkInnListAnswer);
-        dao.saveResult(checkInnListAnswer);
+        workOneThread(checkInnList);
+        log.info("checkInnListAnswer: {}", checkInnList);
+        dao.saveResult(checkInnList);
 
         stopWatch.stop();
         log.info("jobCheck ended, time work: {}", stopWatch.getTime() / 1000);
@@ -48,7 +47,7 @@ public class JobCheck {
 
 
 
-    public List<CheckInn> workOneThread(List<CheckInn> checkInnList) {
+    public void workOneThread(List<CheckInn> checkInnList) {
 
         log.info("workOneThread started");
 
@@ -58,7 +57,6 @@ public class JobCheck {
         }
 
         log.info("workOneThread ended");
-        return checkInnList;
     }
 }
 
