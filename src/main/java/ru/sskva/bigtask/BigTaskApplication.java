@@ -13,5 +13,4 @@ public class BigTaskApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BigTaskApplication.class, args);
 	}
-
 }

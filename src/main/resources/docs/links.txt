@@ -1,0 +1,5 @@
+Многопоточность в Java: основы
+https://www.youtube.com/watch?v=zxZ0BXlTys0
+
+Многопоточность в Java: средства стандартной библиотеки
+https://www.youtube.com/watch?v=umTVNoG3760

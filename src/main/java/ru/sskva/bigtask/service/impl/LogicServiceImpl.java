@@ -27,7 +27,7 @@ public class LogicServiceImpl implements LogicService {
     private final Config config;
 
     @Override
-    public Response saveInnCSV(MultipartFile file)  {
+    public synchronized Response saveInnCSV(MultipartFile file)  {
 
         if (dao.ifExistsFileInProcessOrLoading())
             throw new ExistsFileInProcessOrLoadingException();

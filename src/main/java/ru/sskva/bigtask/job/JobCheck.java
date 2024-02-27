@@ -22,7 +22,7 @@ public class JobCheck {
 
 
     @Scheduled(cron = "*/1 * * * * *")
-    public void jobCheck() {
+    private void jobCheck() {
 
         log.info("jobCheck started");
         StopWatch stopWatch = new StopWatch();
@@ -47,7 +47,7 @@ public class JobCheck {
 
 
 
-    public void workOneThread(List<CheckInn> checkInnList) {
+    private void workOneThread(List<CheckInn> checkInnList) {
 
         log.info("workOneThread started");
 
