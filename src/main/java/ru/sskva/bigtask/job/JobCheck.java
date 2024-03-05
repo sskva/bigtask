@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.sskva.bigtask.dao.Dao;
 import ru.sskva.bigtask.domain.entity.CheckInn;
+import ru.sskva.bigtask.fjp.Fjp;
 import ru.sskva.bigtask.gate.RestClient;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JobCheck {
 
+    private final Fjp fjp;
     private final Dao dao;
     private final RestClient restClient;
 
@@ -37,7 +39,7 @@ public class JobCheck {
             return;
         }
 
-        workOneThread(checkInnList);
+        workForkJoinPool(checkInnList);
         log.info("checkInnListAnswer: {}", checkInnList);
         dao.saveResult(checkInnList);
 
@@ -47,16 +49,9 @@ public class JobCheck {
 
 
 
-    private void workOneThread(List<CheckInn> checkInnList) {
+    private void workForkJoinPool(List<CheckInn> checkInnList) {
 
-        log.info("workOneThread started");
-
-        for (CheckInn checkInn : checkInnList) {
-            String status = restClient.call(checkInn.getInn());
-            checkInn.setStatus(status);
-        }
-
-        log.info("workOneThread ended");
+        fjp.process(checkInnList);
     }
 }
 

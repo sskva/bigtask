@@ -15,8 +15,9 @@ import ru.sskva.bigtask.config.Config;
 public class RestClient {
 
     private final Config config;
-
     private final ObjectMapper mapper = new ObjectMapper();
+
+
 
     public String call(String inn) {
 
@@ -24,7 +25,6 @@ public class RestClient {
             RestTemplate restTemplate = new RestTemplate();
             String url = config.getUrlExternalService();
             ResponseEntity<String> response = restTemplate.getForEntity(url.concat(inn), String.class);
-            log.info("response: {}", response);
 
             JsonNode root = mapper.readTree(response.getBody());
             JsonNode name = root.path("data");

@@ -21,6 +21,20 @@ CREATE TABLE IF NOT EXISTS check_inn
 ) COLLATE utf8_bin;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 SELECT count(*)
 FROM check_inn
 WHERE file_id = 'b34e48b92ccb4fb89aab7308ca5d02bd';
