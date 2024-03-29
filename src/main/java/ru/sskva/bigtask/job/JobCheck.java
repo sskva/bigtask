@@ -7,8 +7,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.sskva.bigtask.dao.Dao;
 import ru.sskva.bigtask.domain.entity.CheckInn;
-import ru.sskva.bigtask.fjp.Fjp;
-import ru.sskva.bigtask.gate.RestClient;
+import ru.sskva.bigtask.work.fjp_ra.FjpRa;
+import ru.sskva.bigtask.work.fjp_rt.FjpRt;
+import ru.sskva.bigtask.work.one_thread.OneThread;
 
 import java.util.List;
 
@@ -17,9 +18,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JobCheck {
 
-    private final Fjp fjp;
+    private final FjpRt fjpRt;
+    private final FjpRa fjpRa;
+    private final OneThread oneThread;
     private final Dao dao;
-    private final RestClient restClient;
 
 
 
@@ -33,25 +35,18 @@ public class JobCheck {
         List<CheckInn> checkInnList = dao.getInn();
         log.info("checkInnList.size(): {}", checkInnList.size());
 
-        if (checkInnList.size() == 0) {
+        if (checkInnList.isEmpty()) {
             dao.setFileStatusProcessed();
             log.info("jobCheck ended");
             return;
         }
 
-        workForkJoinPool(checkInnList);
-        log.info("checkInnListAnswer: {}", checkInnList);
-        dao.saveResult(checkInnList);
+        List<CheckInn> checkInnListAnswer = fjpRt.process(checkInnList);
+        log.info("checkInnListAnswer: {}", checkInnListAnswer);
+        dao.saveResult(checkInnListAnswer);
 
         stopWatch.stop();
         log.info("jobCheck ended, time work: {}", stopWatch.getTime() / 1000);
-    }
-
-
-
-    private void workForkJoinPool(List<CheckInn> checkInnList) {
-
-        fjp.process(checkInnList);
     }
 }
 

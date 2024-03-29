@@ -50,6 +50,7 @@ WHERE id > 0;
 SELECT id,
        file_id,
        count_lines,
-       TIME_TO_SEC(TIMEDIFF(time_end, time_start))                AS time_work,
+       TIME_TO_SEC(TIMEDIFF(time_end, time_start))               AS time_work,
+       TIME_TO_SEC(TIMEDIFF(time_end, time_start)) / count_lines AS seconds_per_line,
        count_lines / TIME_TO_SEC(TIMEDIFF(time_end, time_start)) AS lines_per_second
 FROM file_info;
